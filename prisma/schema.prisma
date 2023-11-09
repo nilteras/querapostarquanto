@@ -10,7 +10,7 @@ datasource db {
 model bet {
   id            Int          @id @default(autoincrement())
   createdAt     DateTime     @default(now()) @db.Timestamp(6)
-  updatedAt     DateTime     @db.Timestamp(6)
+  updatedAt     DateTime     @default(now()) @db.Timestamp(6)
   homeTeamScore Int
   awayTeamScore Int
   amountBet     Int
@@ -37,7 +37,7 @@ model game {
 model participant {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
   name      String   @db.VarChar(255)
   balance   Int
   bet       bet[]
