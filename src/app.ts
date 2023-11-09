@@ -9,7 +9,7 @@ const app = express();
 app
   .use(cors())
   .use(express.json())
-  .get('/health', (req, res) => res.send(`I'm OK`));
+  .get('/health', (req, res) => res.send(`OK`));
 
 export function init(): Promise<Express> {
     connectDB();
