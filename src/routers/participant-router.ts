@@ -1,10 +1,10 @@
-import { createParticipant } from "@/controllers/participant-controller";
+import { createParticipant, getParticipants } from "@/controllers/participant-controller";
 import { Router } from "express";
 
 const participantRouter = Router();
 
 participantRouter
     .post('/', createParticipant)
-    .get('/');
+    .get('/', getParticipants);
 
 export default participantRouter;

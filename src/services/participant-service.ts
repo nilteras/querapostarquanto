@@ -6,6 +6,13 @@ async function postParticipant({name,balance}: CreateParticipant){
     return result;
 };
 
+async function getParticipants(){
+    const participants = await participantRepository.getAllParticipantsDB();
+
+    return participants;
+}
+
 export const participantService = {
-    postParticipant
+    postParticipant,
+    getParticipants
 }
