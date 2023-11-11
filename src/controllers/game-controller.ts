@@ -16,3 +16,10 @@ export async function getGames(req: Request, res: Response) {
 
     return res.status(httpStatus.OK).send(games);
 };
+
+export async function getGameWithBets(req: Request, res: Response){
+    const gamerId = req.params;
+    const game = await gamesService.getGameWithBets(Number(gamerId.id))
+
+    return res.status(httpStatus.OK).send(game);
+};
