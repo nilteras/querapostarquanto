@@ -3,13 +3,13 @@ import { CreateParticipant } from "./../protocols";
 
 
 async function createParticipantDB(data: CreateParticipant){
-    return prisma.participant.create({
+    return await prisma.participant.create({
         data,
     });
 };
 
 async function getAllParticipantsDB(){
-    return prisma.participant.findMany();
+    return await prisma.participant.findMany();
 }
 
 export const participantRepository = {
