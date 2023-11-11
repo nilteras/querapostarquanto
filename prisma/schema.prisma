@@ -16,11 +16,12 @@ model bet {
   amountBet     Int
   gameId        Int?
   participantId Int?
-  status        String       @db.VarChar(255)
-  amountWon     Int?
+  status        String       @default("PENDING") @db.VarChar(255)
+  amountWon     Int?         @default(-1)
   game          game?        @relation(fields: [gameId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   participant   participant? @relation(fields: [participantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
+
 
 model game {
   id            Int      @id @default(autoincrement())

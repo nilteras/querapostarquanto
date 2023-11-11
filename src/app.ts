@@ -4,6 +4,7 @@ import { connectDB, disconnectDB, loadEnv } from './config';
 import participantRouter from './routers/participant-router';
 import { handleApplicationErrors } from './middlewares/error-handling-middleware';
 import gamesRouter from './routers/game-router';
+import betRouter from './routers/bet-router';
 
 
 loadEnv()
@@ -15,6 +16,7 @@ app
   .get('/health', (req, res) => res.send(`OK`))
   .use('/participants', participantRouter)
   .use('/games', gamesRouter)
+  .use('/bets', betRouter)
   .use(handleApplicationErrors);
 
 export function init(): Promise<Express> {
