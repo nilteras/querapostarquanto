@@ -1,4 +1,5 @@
-import { createParticipant, getParticipants } from "@/controllers/participant-controller";
+
+import { createParticipant, getParticipants } from "./../controllers/participant-controller";
 import { Router } from "express";
 
 const participantRouter = Router();

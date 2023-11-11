@@ -1,6 +1,7 @@
-import { participantService } from "@/services/participant-service";
+
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import { participantService } from "./../services/participant-service";
 
 
 export async function createParticipant(req: Request, res: Response){

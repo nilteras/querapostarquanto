@@ -1,5 +1,6 @@
-import { prisma } from "@/config";
-import { CreateParticipant } from "@/protocols";
+import { prisma } from "./../config";
+import { CreateParticipant } from "./../protocols";
+
 
 async function createParticipantDB(data: CreateParticipant){
     return prisma.participant.create({
