@@ -3,6 +3,7 @@ import cors from 'cors';
 import { connectDB, disconnectDB, loadEnv } from './config';
 import participantRouter from './routers/participant-router';
 import { handleApplicationErrors } from './middlewares/error-handling-middleware';
+import gamesRouter from './routers/game-router';
 
 
 loadEnv()
@@ -13,6 +14,7 @@ app
   .use(express.json())
   .get('/health', (req, res) => res.send(`OK`))
   .use('/participants', participantRouter)
+  .use('/games', gamesRouter)
   .use(handleApplicationErrors);
 
 export function init(): Promise<Express> {
