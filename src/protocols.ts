@@ -6,6 +6,11 @@ export type CreateGame = Omit<game, 'id' | 'createdAt' | 'updatedAt' | 'homeTeam
 
 export type CreateBet = Omit<bet, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'amountWon'>;
 
+export type Score = {
+  homeTeamScore: number,
+  awayTeamScore: number,
+};
+
 export type ApplicationError = {
     name: string;
     message: string;

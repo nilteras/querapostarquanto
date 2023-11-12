@@ -1,8 +1,12 @@
 import { CreateParticipant } from "protocols";
 import { participantRepository } from "./../repositories/participant-repository";
+import { UnauthorizedError } from "./../errors/unauthorized-error-game";
 
 
 async function postParticipant({name,balance}: CreateParticipant){
+    if(balance < 1000){
+        throw UnauthorizedError('Minimum balance 1000');
+    }
     const result = await participantRepository.createParticipantDB({name, balance});
     return result;
 };
