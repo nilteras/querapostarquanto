@@ -2,7 +2,7 @@
 
 Bem vindo a esta casa de apostas, onde é possível cadastrar paricipantes, jogos e realizar apostas.
 
-Aqui está o link do deploy do projeto: 
+Aqui está o link do deploy do projeto: Link falho, assim que tornar-se executável, ficará disponível.
 
  Instalação
 

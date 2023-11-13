@@ -13,7 +13,7 @@
     "dev:migration:generate": "npm run dev:load-envs prisma migrate dev",
     "dev:seed": "npm run dev:load-envs prisma db seed",
     "dev": "nodemon src/server.ts",
-    "test": "jest",
+    "test": "dotenv -e env.test prisma migrate deploy & dotenv -e .env.test jest -- -i",
     "test:coverage": "npm run test -- --coverage",
     "lint": "eslint .",
     "prepare": "husky install"
