@@ -7,9 +7,3 @@ export function unauthorizedErrorGame(): ApplicationError {
   };
 }
 
-export function UnauthorizedError(details: string): ApplicationError {
-  return {
-    name: "UnauthorizedError",
-    message: `Access not auhorized: ${details}`
-  }
-}

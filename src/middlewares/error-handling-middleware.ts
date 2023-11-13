@@ -1,12 +1,12 @@
 import httpStatus from "http-status";
 import { ApplicationError } from "protocols";
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 export function handleApplicationErrors(
     err:  ApplicationError | Error,
     _req: Request,
     res: Response,
-    next: NextFunction,
+    next: NextFunction
   ) {
  
   
@@ -35,6 +35,7 @@ export function handleApplicationErrors(
     }
 
     /* eslint-disable-next-line no-console */
+
     console.error(err);
     res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
       error: 'InternalServerError',

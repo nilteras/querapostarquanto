@@ -1,8 +1,9 @@
 import { CreateGame, Score } from "protocols";
 import { gamesRepository } from "./../repositories/game-repository";
 import { notFoundError } from "./../errors/not-found-error";
-import { unauthorizedErrorGame } from "./../errors/unauthorized-error-game";
+
 import calculateEarnings from "./../utils/bet-utils";
+import { UnauthorizedError } from "./../errors/unauthorization-error";
 
 async function postGame({ homeTeamName, awayTeamName }: CreateGame) {
     return await gamesRepository.createGameDB({ homeTeamName, awayTeamName });
@@ -23,9 +24,11 @@ async function finishGame(gameId: number, { homeTeamScore, awayTeamScore }: Scor
         throw notFoundError();
     }
 
+    if (game.isFinished === true) {
+        throw UnauthorizedError('This game is finished');
+    }
+
     const gameIsFinished = await gamesRepository.getGameWithBetsDB(gameId);
-   
-    if (gameIsFinished.isFinished === true) throw unauthorizedErrorGame();
 
     const result = await gamesRepository.finishGameDB(gameId, { homeTeamScore, awayTeamScore });
 

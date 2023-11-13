@@ -1,6 +1,7 @@
 import { CreateParticipant } from "protocols";
 import { participantRepository } from "./../repositories/participant-repository";
-import { UnauthorizedError } from "./../errors/unauthorized-error-game";
+import { UnauthorizedError } from "./../errors/unauthorization-error";
+
 
 
 async function postParticipant({name,balance}: CreateParticipant){
