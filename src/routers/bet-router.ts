@@ -3,7 +3,6 @@ import { Router } from "express";
 
 const betRouter = Router();
 
-betRouter
-    .post('/', createBet);
+betRouter.post('/', createBet);
 
 export default betRouter;

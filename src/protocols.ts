@@ -1,10 +1,10 @@
-import { Prisma, bet, game, participant } from "@prisma/client";
+import { Prisma, Bet, Game, Participant } from "@prisma/client";
 
-export type CreateParticipant = Omit<participant, 'id' | 'createdAt' | 'updatedAt'>;
+export type CreateParticipant = Omit<Participant, 'id' | 'createdAt' | 'updatedAt'>;
 
-export type CreateGame = Omit<game, 'id' | 'createdAt' | 'updatedAt' | 'homeTeamScore' | 'awayTeamScore' | 'isFinished'>;
+export type CreateGame = Omit<Game, 'id' | 'createdAt' | 'updatedAt' | 'homeTeamScore' | 'awayTeamScore' | 'isFinished'>;
 
-export type CreateBet = Omit<bet, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'amountWon'>;
+export type CreateBet = Omit<Bet, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'amountWon'>;
 
 export type Score = {
   homeTeamScore: number,
@@ -16,9 +16,9 @@ export type ApplicationError = {
   message: string;
 };
 
-export type GameWithBets = Prisma.gameGetPayload<{
+export type GameWithBets = Prisma.GameGetPayload<{
   include: { bet: true };
-}> & { bets: bet[] };
+}> & { bets: Bet[] };
 
 export type bets = {
   id: number;

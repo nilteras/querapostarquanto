@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model bet {
+model Bet {
   id            Int          @id @default(autoincrement())
   createdAt     DateTime     @default(now()) @db.Timestamp(6)
   updatedAt     DateTime     @default(now()) @db.Timestamp(6)
@@ -18,12 +18,13 @@ model bet {
   participantId Int?
   status        String       @default("PENDING") @db.VarChar(255)
   amountWon     Int?         @default(-1)
-  game          game?        @relation(fields: [gameId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  participant   participant? @relation(fields: [participantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  game          Game?        @relation(fields: [gameId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  participant   Participant? @relation(fields: [participantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  @@map("bet")
 }
 
 
-model game {
+model Game {
   id            Int      @id @default(autoincrement())
   createdAt     DateTime @default(now()) @db.Timestamp(6)
   updatedAt     DateTime @default(now()) @db.Timestamp(6)
@@ -32,14 +33,16 @@ model game {
   homeTeamScore Int      @default(0)
   awayTeamScore Int      @default(0)
   isFinished    Boolean  @default(false)
-  bet           bet[]
+  bet           Bet[]
+  @@map("game")
 }
 
-model participant {
+model Participant {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @default(now()) @db.Timestamp(6)
   name      String   @db.VarChar(255)
   balance   Int
-  bet       bet[]
+  bet       Bet[]
+  @@map("participant")
 }
