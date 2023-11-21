@@ -2,8 +2,6 @@ import { CreateParticipant } from "protocols";
 import { participantRepository } from "./../repositories/participant-repository";
 import { UnauthorizedError } from "./../errors/unauthorization-error";
 
-
-
 async function postParticipant({name,balance}: CreateParticipant){
     if(balance < 1000){
         throw UnauthorizedError('Minimum balance 1000');

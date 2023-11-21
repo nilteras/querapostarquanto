@@ -1,0 +1,116 @@
+import app, { init } from "app";
+import httpStatus from "http-status";
+import supertest from "supertest";
+import { faker } from '@faker-js/faker';
+import { cleanDb } from "../helpers";
+import { disconnectDB, prisma } from "./../../src/config/database";
+import { createParticipant } from "../factories/participant-factory";
+import { createFinishedGame, createGame } from "../factories/game-factory";
+
+beforeAll(async () => {
+    await init();
+    await cleanDb();
+});
+
+afterAll(async () => {
+    await disconnectDB();
+});
+
+
+const server = supertest(app);
+
+describe('POST /bet', () => {
+
+    it('should respond with status 400 when body is not given', async () => {
+        const response = await server.post('/bets');
+
+        expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    });
+
+
+    it('should respond with status 400 when body is not valid', async () => {
+        const invalidBody = { [faker.lorem.word()]: faker.lorem.word() };
+
+        const response = await server.post('/bets').send(invalidBody);
+
+        expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    });
+
+    describe('when body is valid', () => {
+    
+        it('should respond with status 400 when the data is different of number', async () => {
+            const body = {
+                homeTeamScore: faker.lorem.word(),
+                awayTeamScore: faker.lorem.word(),
+                amountBet: faker.lorem.word(),
+                gameId: faker.lorem.word(),
+                participantId: faker.lorem.word(),
+            }
+            const response = await server.post('/bets').send(body);
+
+            expect(response.status).toBe(httpStatus.BAD_REQUEST);
+        });
+
+        it('should respond with status 404 when bet value is <= 0', async () => {
+            const participant = {
+                name: faker.person.firstName(),
+                balance: faker.number.int({ min: 1000 })
+            }
+
+            await server.post('/participants').send(participant);
+            const game = {
+                homeTeamName: "Brasil",
+                awayTeamName: "Argentina",
+            }
+            await server.post('/games').send(game);
+            const body = {
+                homeTeamScore: faker.number.int({min: 0, max: 10}),
+                awayTeamScore: faker.number.int({min: 0, max: 10}),
+                amountBet: faker.number.int({max: 0}),
+                gameId: 1,
+                participantId: 1,
+            }
+            const response = await server.post('/bet').send(body);
+    
+            expect(response.status).toBe(httpStatus.NOT_FOUND);
+        });
+
+        it("Should return status 401 when amountBet is less than balance", async() => {
+
+            const participant = await createParticipant()
+            const game = await createGame()
+    
+            const invalidBody = {
+                gameId: game.id,
+                participantId: participant.id,
+                homeTeamScore: faker.number.int({min: 1, max: 10}),
+                awayTeamScore: faker.number.int({min: 1, max: 10}),
+                amountBet: participant.balance + 1,
+            }
+    
+            const {status, text} = await server.post('/bets').send(invalidBody);
+            expect(status).toBe(httpStatus.UNAUTHORIZED)
+            
+        });
+
+        it("Should return status 401 when finishing an already finished game", async() => {
+
+            const participant = await createParticipant()
+            const game = await createFinishedGame()
+    
+            const invalidBody = {
+                gameId: game.id,
+                participantId: participant.id,
+                homeTeamScore: faker.number.int({min: 1, max: 10}),
+                awayTeamScore: faker.number.int({min: 1, max: 10}),
+                amountBet: participant.balance - 1,
+            }
+    
+            const {status, text} = await server.post('/bets').send(invalidBody);
+            expect(status).toBe(httpStatus.UNAUTHORIZED)
+            expect(text).toBe("{\"message\":\"Access not auhorized: This game is finished\"}");
+            
+        });
+
+    });
+});

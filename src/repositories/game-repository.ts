@@ -13,14 +13,7 @@ async function getGamesDB() {
 };
 
 async function getGameWithBetsDB(gameId: number) {
-    const game = await prisma.game.findUnique({
-        where: { id: gameId },
-    });
-
-    if (!game) {
-        throw new Error(`Game with id ${gameId} not found`);
-    }
-
+    const game = await getGamesByIdDB(gameId);
     const bets = await prisma.bet.findMany({
         where: { gameId: game.id },
     });
@@ -50,7 +43,7 @@ async function getGameWithBetsDB(gameId: number) {
 };
 
 async function getGamesByIdDB(gameId: number) {
-    return prisma.game.findUnique({
+    return await prisma.game.findUnique({
         where: {
             id: gameId
         },

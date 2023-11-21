@@ -2,10 +2,12 @@ import app, { init } from "app";
 import httpStatus from "http-status";
 import supertest from "supertest";
 import { faker } from '@faker-js/faker';
-import { disconnectDB, prisma } from "./../src/config/database";
+import { disconnectDB, prisma } from "./../../src/config/database";
+import { cleanDb } from "../helpers";
 
 beforeAll(async () => {
     await init();
+    await cleanDb();
 });
 
 afterAll(async () => {
@@ -64,32 +66,31 @@ describe('POST /participant', () => {
             expect(response.status).toBe(httpStatus.CREATED);
         });
 
-        // it("should return all participants", async () => {
-        //     await prisma.participant.create({
-        //         data: {
-        //             name: faker.person.firstName(),
-        //             balance: faker.number.int({ min: 1000, max: 100000 })
-        //         }
-        //     });
-        //     await prisma.participant.create({
-        //         data: {
-        //             name: faker.person.firstName(),
-        //             balance: faker.number.int({ min: 1000, max: 100000 })
-        //         }
-        //     });
-        //     const { body, status } = await server.get("/participants");
+        it("should return all participants", async () => {
+            await prisma.participant.create({
+                data: {
+                    name: faker.person.firstName(),
+                    balance: faker.number.int({ min: 1000, max: 100000 })
+                }
+            });
+            await prisma.participant.create({
+                data: {
+                    name: faker.person.firstName(),
+                    balance: faker.number.int({ min: 1000, max: 100000 })
+                }
+            });
+            const { body, status } = await server.get("/participants");
 
-        //     expect(status).toBe(httpStatus.OK);
-        //     expect(body).toHaveLength(2);
-        //     expect(body).toEqual(expect.arrayContaining([
-        //         expect.objectContaining({
-        //             id: expect.any(Number),
-        //             createdAt: expect.any(String),
-        //             updatedAt: expect.any(String),
-        //             name: expect.any(String),
-        //             balance: expect.any(Number),
-        //         })
-        //     ]))
-        // });
+            expect(status).toBe(httpStatus.OK);
+            expect(body).toEqual(expect.arrayContaining([
+                expect.objectContaining({
+                    id: expect.any(Number),
+                    createdAt: expect.any(String),
+                    updatedAt: expect.any(String),
+                    name: expect.any(String),
+                    balance: expect.any(Number),
+                })
+            ]))
+        });
     });
 });
