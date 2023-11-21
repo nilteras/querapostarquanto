@@ -1,4 +1,3 @@
-
 import { validateSchema } from "./../middlewares/validation-middleware";
 import { createParticipant, getParticipants } from "./../controllers/participant-controller";
 import { Router } from "express";

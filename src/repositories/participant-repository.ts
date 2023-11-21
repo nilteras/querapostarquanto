@@ -1,17 +1,19 @@
 import { prisma } from "./../config";
 import { CreateParticipant } from "./../protocols";
 
-
+//criar participante
 async function createParticipantDB(data: CreateParticipant){
     return await prisma.participant.create({
         data,
     });
 };
 
+//buscar todos os participantes
 async function getAllParticipantsDB(){
     return await prisma.participant.findMany();
 };
 
+//buscar participante por ID
 async function getParticipantByIdDB(id: number){
     return await prisma.participant.findUnique({
         where: {
@@ -20,6 +22,7 @@ async function getParticipantByIdDB(id: number){
     });
 };
 
+//Atualizar saldo do participante
 async function updateParticipantDB(participantId: number, newBalance: number){
     return await prisma.participant.update({
         where: {

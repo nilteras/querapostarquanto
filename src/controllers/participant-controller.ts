@@ -2,11 +2,12 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import { participantService } from "./../services/participant-service";
+import { CreateParticipant } from "protocols";
 
 
 export async function createParticipant(req: Request, res: Response, next: NextFunction) {
     try {
-        const { name, balance } = req.body;
+        const { name, balance } = req.body as CreateParticipant;
 
         const result = await participantService.postParticipant({ name, balance });
 
