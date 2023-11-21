@@ -17,7 +17,6 @@ async function getGameWithBetsDB(gameId: number) {
     const bets = await prisma.bet.findMany({
         where: { gameId: game.id },
     });
-
     return {
         id: game.id,
         createdAt: game.createdAt.toISOString(),
