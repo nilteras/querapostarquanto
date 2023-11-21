@@ -1,17 +1,17 @@
 import { prisma } from "./../config";
 import { CreateGame, Score } from "./../protocols";
 
-
+//criar jogo
 async function createGameDB(data: CreateGame) {
     return prisma.game.create({
         data,
     });
 };
-
+//buscar todos os jogos
 async function getGamesDB() {
     return prisma.game.findMany();
 };
-
+//buscar jogo com apostas atreladas
 async function getGameWithBetsDB(gameId: number) {
     const game = await getGamesByIdDB(gameId);
     const bets = await prisma.bet.findMany({
@@ -41,7 +41,7 @@ async function getGameWithBetsDB(gameId: number) {
         })),
     };
 };
-
+//buscar jogo pelo ID
 async function getGamesByIdDB(gameId: number) {
     return await prisma.game.findUnique({
         where: {
@@ -49,7 +49,7 @@ async function getGamesByIdDB(gameId: number) {
         },
     });
 };
-
+//finalizar jogo
 async function finishGameDB(gameId: number, data: Score) {
     const updatedGame = await prisma.game.update({
         where: {

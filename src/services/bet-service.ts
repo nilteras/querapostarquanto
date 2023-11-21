@@ -8,10 +8,10 @@ import { UnauthorizedError } from "./../errors/unauthorization-error";
 
 async function postBet({ homeTeamScore, awayTeamScore, amountBet, gameId, participantId }: CreateBet) {
     if(amountBet <= 0){
-        throw UnauthorizedError('Bet value must be greater than 0');
+        throw UnauthorizedError('Bet value must be greater than 0'); //verifica se aposta é menor ou igual a zero
     }
     let newBalance = 0;
-    const participant = await participantRepository.getParticipantByIdDB(participantId);
+    const participant = await participantRepository.getParticipantByIdDB(participantId); 
     if (!participant) {
         throw notFoundError();
     }
@@ -21,17 +21,17 @@ async function postBet({ homeTeamScore, awayTeamScore, amountBet, gameId, partic
     }
 
     if (game.isFinished === true) {
-        throw UnauthorizedError('This game is finished');
+        throw UnauthorizedError('This game is finished'); //erro para tentar finalizar jogo já finalizado
     }
     if (amountBet > participant.balance) {
-        throw UnauthorizedError(`Insufficient funds => ${participant.balance}`);
+        throw UnauthorizedError(`Insufficient funds => ${participant.balance}`); //verifica saldo insuficiente para aposta
     } else {
-        newBalance = (participant.balance - amountBet);
+        newBalance = (participant.balance - amountBet);//ja desconta do saldo do participante
     }
 
-    await participantRepository.updateParticipantDB(participantId, newBalance);
+    await participantRepository.updateParticipantDB(participantId, newBalance); //atualiza o saldo
 
-    return await betRepository.createBetDB({ homeTeamScore, awayTeamScore, amountBet, gameId, participantId });
+    return await betRepository.createBetDB({ homeTeamScore, awayTeamScore, amountBet, gameId, participantId }); //cria aposta
 }
 
 

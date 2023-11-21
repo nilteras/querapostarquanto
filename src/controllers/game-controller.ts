@@ -3,13 +3,16 @@ import httpStatus from "http-status";
 import { gamesService } from "./../services/game-service";
 import { CreateGame, Score } from "protocols";
 
-export async function createGame(req: Request, res: Response) {
-    const { homeTeamName, awayTeamName } = req.body as CreateGame;
+export async function createGame(req: Request, res: Response, next: NextFunction) {
+    try {
+        const { homeTeamName, awayTeamName } = req.body as CreateGame;
 
-    const result = await gamesService.postGame({ homeTeamName, awayTeamName });
+        const result = await gamesService.postGame({ homeTeamName, awayTeamName });
 
-    return res.status(httpStatus.CREATED).send(result);
-
+        return res.status(httpStatus.CREATED).send(result);
+    } catch (error) {
+        next(error);
+    }
 };
 
 export async function getGames(req: Request, res: Response) {

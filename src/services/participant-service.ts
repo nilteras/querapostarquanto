@@ -7,7 +7,7 @@ async function postParticipant({name,balance}: CreateParticipant){
     if(balance < 1000){
         throw UnauthorizedError('Minimum balance 1000');
     }    
-    const result = await participantRepository.createParticipantDB({name, balance});
+    const result = await participantRepository.createParticipantDB({name, balance}); //cria participante
     return result;
 };
 

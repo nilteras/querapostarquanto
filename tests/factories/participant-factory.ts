@@ -9,3 +9,11 @@ export async function createParticipant() {
         }
     })
 }
+
+export async function getParticipantById(id: number) {
+    return await prisma.participant.findUnique({
+        where: {
+           id,
+        }
+    })
+}

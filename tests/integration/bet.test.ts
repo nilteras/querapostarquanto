@@ -4,7 +4,7 @@ import supertest from "supertest";
 import { faker } from '@faker-js/faker';
 import { cleanDb } from "../helpers";
 import { disconnectDB, prisma } from "./../../src/config/database";
-import { createParticipant } from "../factories/participant-factory";
+import { createParticipant, getParticipantById } from "../factories/participant-factory";
 import { createFinishedGame, createGame } from "../factories/game-factory";
 
 beforeAll(async () => {
@@ -51,31 +51,23 @@ describe('POST /bet', () => {
             expect(response.status).toBe(httpStatus.BAD_REQUEST);
         });
 
-        it('should respond with status 404 when bet value is <= 0', async () => {
-            const participant = {
-                name: faker.person.firstName(),
-                balance: faker.number.int({ min: 1000 })
-            }
+        it('should respond with status 401 when bet value is <= 0', async () => {
+            const participant = await createParticipant()
+            const game = await createGame()
 
-            await server.post('/participants').send(participant);
-            const game = {
-                homeTeamName: "Brasil",
-                awayTeamName: "Argentina",
-            }
-            await server.post('/games').send(game);
             const body = {
                 homeTeamScore: faker.number.int({min: 0, max: 10}),
                 awayTeamScore: faker.number.int({min: 0, max: 10}),
                 amountBet: faker.number.int({max: 0}),
-                gameId: 1,
-                participantId: 1,
+                gameId: game.id,
+                participantId: participant.id,
             }
-            const response = await server.post('/bet').send(body);
+            const response = await server.post('/bets').send(body);
     
-            expect(response.status).toBe(httpStatus.NOT_FOUND);
+            expect(response.status).toBe(httpStatus.UNAUTHORIZED);
         });
 
-        it("Should return status 401 when amountBet is less than balance", async() => {
+        it("should respond status 401 when amountBet is less than balance", async() => {
 
             const participant = await createParticipant()
             const game = await createGame()
@@ -88,7 +80,7 @@ describe('POST /bet', () => {
                 amountBet: participant.balance + 1,
             }
     
-            const {status, text} = await server.post('/bets').send(invalidBody);
+            const {status} = await server.post('/bets').send(invalidBody);
             expect(status).toBe(httpStatus.UNAUTHORIZED)
             
         });
@@ -109,6 +101,27 @@ describe('POST /bet', () => {
             const {status, text} = await server.post('/bets').send(invalidBody);
             expect(status).toBe(httpStatus.UNAUTHORIZED)
             expect(text).toBe("{\"message\":\"Access not auhorized: This game is finished\"}");
+            
+        });
+
+        it("should respond balance participant with value subtracted after bet made", async() => {
+
+            const participant = await createParticipant()
+            const game = await createGame()
+            const balanceParticipant = participant.balance;
+            const body = {
+                gameId: game.id,
+                participantId: participant.id,
+                homeTeamScore: faker.number.int({min: 1, max: 10}),
+                awayTeamScore: faker.number.int({min: 1, max: 10}),
+                amountBet: participant.balance - 1,
+            }    
+            const {status} = await server.post('/bets').send(body);
+
+            const participantAtt = await getParticipantById(participant.id);
+
+            expect(status).toBe(httpStatus.CREATED)
+            expect(true).toBe(participantAtt.balance < balanceParticipant);
             
         });
 

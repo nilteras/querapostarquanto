@@ -4,6 +4,7 @@ import supertest from "supertest";
 import { faker } from '@faker-js/faker';
 import { disconnectDB, prisma } from "./../../src/config/database";
 import { cleanDb } from "../helpers";
+import { createParticipant } from "../factories/participant-factory";
 
 beforeAll(async () => {
     await init();
@@ -67,18 +68,9 @@ describe('POST /participant', () => {
         });
 
         it("should return all participants", async () => {
-            await prisma.participant.create({
-                data: {
-                    name: faker.person.firstName(),
-                    balance: faker.number.int({ min: 1000, max: 100000 })
-                }
-            });
-            await prisma.participant.create({
-                data: {
-                    name: faker.person.firstName(),
-                    balance: faker.number.int({ min: 1000, max: 100000 })
-                }
-            });
+            await createParticipant();
+            await createParticipant();
+            
             const { body, status } = await server.get("/participants");
 
             expect(status).toBe(httpStatus.OK);
